@@ -23,15 +23,15 @@
     "streaming",
     "audio"
   ],
-  "homepage": "https://github.com/YOUR_USERNAME/sociolod#readme",
+  "homepage": "https://github.com/Peculiar-010/sociolod#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/YOUR_USERNAME/sociolod.git"
+    "url": "https://github.com/Peculiar-010/sociolod.git"
   },
   "bugs": {
-    "url": "https://github.com/YOUR_USERNAME/sociolod/issues"
+    "url": "https://github.com/Peculiar-010/sociolod/issues"
   },
-  "author": "YOUR_NAME <YOUR_EMAIL>",
+  "author": "sparclac@gmail.com",
   "license": "MIT",
   "sideEffects": false,
   "type": "module",
@@ -99,6 +99,6 @@
   },
   "funding": {
     "type": "github",
-    "url": "https://github.com/sponsors/YOUR_USERNAME"
+    "url": "https://github.com/sponsors/Peculiar-010"
   }
 }
