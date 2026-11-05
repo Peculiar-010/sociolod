@@ -5,7 +5,7 @@ Version: 1.0.0
 License: MIT
 Base API URL: https://apispec.litype.workers.dev
 npm: https://www.npmjs.com/package/sociolod
-GitHub: https://github.com/YOUR_USERNAME/sociolod
+GitHub: https://github.com/Peculiar-010/sociolod
 
 ---
 
