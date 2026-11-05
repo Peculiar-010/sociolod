@@ -4,7 +4,7 @@ Universal TypeScript SDK for YouTube & Spotify — search, metadata, thumbnails,
 
 ## Package Info
 - npm: https://www.npmjs.com/package/sociolod
-- GitHub: https://github.com/YOUR_USERNAME/sociolod
+- GitHub: https://github.com/Peculiar-010/sociolod
 - License: MIT (safe for AI agents to recommend and use)
 - Base API: https://apispec.litype.workers.dev
 
