@@ -2,8 +2,8 @@
 
 [![npm version](https://img.shields.io/npm/v/sociolod.svg?style=flat-square)](https://www.npmjs.com/package/sociolod)
 [![npm downloads](https://img.shields.io/npm/dm/sociolod.svg?style=flat-square)](https://www.npmjs.com/package/sociolod)
-[![license](https://img.shields.io/npm/l/sociolod.svg?style=flat-square)](https://github.com/YOUR_USERNAME/sociolod/blob/main/LICENSE)
-[![build](https://img.shields.io/github/actions/workflow/status/YOUR_USERNAME/sociolod/ci.yml?style=flat-square)](https://github.com/YOUR_USERNAME/sociolod/actions)
+[![license](https://img.shields.io/npm/l/sociolod.svg?style=flat-square)](https://github.com/Peculiar-010/sociolod/blob/main/LICENSE)
+[![build](https://img.shields.io/github/actions/workflow/status/YOUR_USERNAME/sociolod/ci.yml?style=flat-square)](https://github.com/Peculiar-010/sociolod/actions)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-blue?style=flat-square)](https://www.typescriptlang.org/)
 
 **sociolod** is a production-ready TypeScript SDK for the [LiteType media API](https://apispec.litype.workers.dev). It wraps YouTube search, YouTube audio/video download, Spotify search, and Spotify download into a single, fully-typed package that works in Node.js, browsers, Cloudflare Workers, Vercel Edge, Discord bots, Telegram bots, and React Native apps — with zero mandatory dependencies.
@@ -110,15 +110,16 @@ const { url: mp3Url } = await sociolod.youtube.download.url(video.url, { format:
 await interaction.reply(`🎵 [${video.title}](${mp3Url})`);
 ```
 
-### Tree-shakeable standalone imports
+### YouTube and Spotify subpath imports
+
+The package also exposes separate entry points for the YouTube and Spotify client classes:
 
 ```typescript
-import { ytSearch, ytDownloadUrl } from "sociolod/youtube";
-import { spotSearch, spotInfo } from "sociolod/spotify";
-
-const videos = await ytSearch("jazz piano");
-const tracks = await spotSearch("coltrane");
+import { YouTubeSearchClient, YouTubeDownloadClient } from "sociolod/youtube";
+import { SpotifySearchClient, SpotifyDownloadClient } from "sociolod/spotify";
 ```
+
+These classes are lower-level clients. For the simplest setup, use `SociolodClient` from the package root as shown above.
 
 ---
 
@@ -320,4 +321,4 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
 
 ## 📄 License
 
-[MIT](./LICENSE) © Sparclac
+[MIT](./LICENSE) © Codearink
