@@ -139,7 +139,7 @@ describe("YouTubeSearchClient cache coverage", () => {
   it("uses cached values for video, thumbnail, links, titles, and channel", async () => {
     const cache = new LRUCache({ enabled: true, ttl: 60_000 });
     const client = new YouTubeSearchClient(BASE_URL, { retries: 0 }, cache);
-    const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+    const fetchMock = vi.fn((input: RequestInfo | URL) => {
       const url = String(input);
       if (url.includes("/thumb")) return mockJsonResponse({ url: "https://img.example/thumb", videoId: "abc", title: "Video" });
       if (url.includes("/links")) return mockJsonResponse(["https://youtube.com/watch?v=abc"]);
