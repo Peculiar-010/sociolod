@@ -54,10 +54,13 @@ export class SociolodClient {
   };
 
   private readonly cache: LRUCache;
-  private readonly config: Required<
-    Omit<SociolodConfig, "cache" | "headers">
-  > & { headers: Record<string, string> };
-
+  private readonly config: {
+    baseUrl: string;
+    timeout: number;
+    retries: number;
+    retryDelay: number;
+    headers: Record<string, string>;
+  };
   constructor(config: SociolodConfig = {}) {
     this.config = {
       baseUrl: config.baseUrl ?? DEFAULT_BASE_URL,
