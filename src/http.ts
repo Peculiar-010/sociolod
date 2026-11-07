@@ -57,11 +57,7 @@ export async function fetchWithRetry(
         const raw = response.headers.get("Retry-After");
         const after = raw ? parseInt(raw, 10) : null;
         const body = await response.text().catch(() => "");
-        throw new RateLimitError(
-          after !== null && !isNaN(after) ? after : null,
-          url,
-          body,
-        );
+        throw new RateLimitError(after !== null && !isNaN(after) ? after : null, url, body);
       }
 
       if (isRetryableStatus(response.status) && attempt < retries) {
@@ -98,22 +94,14 @@ export async function fetchWithRetry(
     }
   }
 
-  throw lastError instanceof Error
-    ? lastError
-    : new NetworkError(`Failed: ${url}`, lastError);
+  throw lastError instanceof Error ? lastError : new NetworkError(`Failed: ${url}`, lastError);
 }
 
-export async function fetchJson<T>(
-  url: string,
-  options: RequestOptions,
-): Promise<T> {
+export async function fetchJson<T>(url: string, options: RequestOptions): Promise<T> {
   const response = await fetchWithRetry(url, options);
   return response.json() as Promise<T>;
 }
 
-export async function fetchStream(
-  url: string,
-  options: RequestOptions,
-): Promise<Response> {
+export async function fetchStream(url: string, options: RequestOptions): Promise<Response> {
   return fetchWithRetry(url, options);
 }
