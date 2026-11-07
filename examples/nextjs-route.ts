@@ -5,7 +5,7 @@
  * GET /api/music?q=lofi&service=youtube
  * GET /api/music?url=https://youtube.com/watch?v=...&format=mp3
  */
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { SociolodClient, ValidationError, RateLimitError } from "sociolod";
 
 // Reuse client across requests (cached at module scope)
