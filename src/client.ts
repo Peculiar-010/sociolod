@@ -5,50 +5,39 @@ import { SpotifySearchClient } from "./spotify/search.js";
 import { SpotifyDownloadClient } from "./spotify/download.js";
 import type { SociolodConfig, RequestOptions } from "./types/index.js";
 
-const DEFAULT_BASE_URL = "https://apispec.litype.workers.dev";
-const DEFAULT_TIMEOUT = 15_000;
-const DEFAULT_RETRIES = 3;
-const DEFAULT_RETRY_DELAY = 500;
-
 export class SociolodClient {
   public readonly youtube: {
     search: YouTubeSearchClient;
     download: YouTubeDownloadClient;
   };
-
   public readonly spotify: {
     search: SpotifySearchClient;
     download: SpotifyDownloadClient;
   };
-
   private readonly cache: LRUCache;
 
   constructor(config: SociolodConfig = {}) {
-    const baseUrl = config.baseUrl ?? DEFAULT_BASE_URL;
-    const timeout = config.timeout ?? DEFAULT_TIMEOUT;
-    const retries = config.retries ?? DEFAULT_RETRIES;
-    const retryDelay = config.retryDelay ?? DEFAULT_RETRY_DELAY;
+    const baseUrl = config.baseUrl ?? "https://apispec.litype.workers.dev";
+    const timeout = config.timeout ?? 15000;
+    const retries = config.retries ?? 3;
+    const retryDelay = config.retryDelay ?? 500;
     const headers = config.headers ?? {};
 
-    this.cache = config.cache != null && config.cache.enabled
-      ? new LRUCache(config.cache)
-      : noopCache;
+    if (config.cache != null && config.cache.enabled === true) {
+      this.cache = new LRUCache(config.cache);
+    } else {
+      this.cache = noopCache;
+    }
 
-    const requestOptions: RequestOptions = {
-      timeout,
-      retries,
-      retryDelay,
-      headers,
-    };
+    const opts: RequestOptions = { timeout, retries, retryDelay, headers };
 
     this.youtube = {
-      search: new YouTubeSearchClient(baseUrl, requestOptions, this.cache),
-      download: new YouTubeDownloadClient(baseUrl, requestOptions, this.cache),
+      search: new YouTubeSearchClient(baseUrl, opts, this.cache),
+      download: new YouTubeDownloadClient(baseUrl, opts, this.cache),
     };
-
     this.spotify = {
-      search: new SpotifySearchClient(baseUrl, requestOptions, this.cache),
-      download: new SpotifyDownloadClient(baseUrl, requestOptions, this.cache),
+      search: new SpotifySearchClient(baseUrl, opts, this.cache),
+      download: new SpotifyDownloadClient(baseUrl, opts, this.cache),
     };
   }
 
