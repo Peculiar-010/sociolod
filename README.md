@@ -1,4 +1,4 @@
-# sociolod — Universal YouTube & Spotify SDK for TypeScript
+# Sociolod — YouTube & Spotify SDK for Node.js and TypeScript
 
 [![npm version](https://img.shields.io/npm/v/sociolod.svg?style=flat-square)](https://www.npmjs.com/package/sociolod)
 [![npm downloads](https://img.shields.io/npm/dm/sociolod.svg?style=flat-square)](https://www.npmjs.com/package/sociolod)
@@ -6,7 +6,13 @@
 [![build](https://img.shields.io/github/actions/workflow/status/Peculiar-010/sociolod/ci.yml?style=flat-square)](https://github.com/Peculiar-010/sociolod/actions)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-blue?style=flat-square)](https://www.typescriptlang.org/)
 
-**sociolod** is a production-ready TypeScript SDK for the [LiteType media API](https://apispec.litype.workers.dev). It wraps YouTube search, YouTube audio/video download, Spotify search, and Spotify download into a single, fully-typed package that works in Node.js, browsers, Cloudflare Workers, Vercel Edge, Discord bots, Telegram bots, and React Native apps — with zero mandatory dependencies.
+**Sociolod** is a TypeScript and JavaScript SDK for working with YouTube and Spotify media endpoints through the [LiteType media API](https://apispec.litype.workers.dev). Use one npm package to search YouTube videos and Spotify tracks, retrieve media information and thumbnails, and request MP3/MP4 download URLs or streams. Sociolod is designed for Node.js applications, browser projects, edge runtimes, and chat-bot integrations, with zero mandatory package dependencies.
+
+If you are looking for a **YouTube API for Node.js**, a **Spotify SDK for TypeScript**, or a **YouTube and Spotify media downloader library**, Sociolod brings these workflows together behind one client.
+
+- **npm:** [sociolod](https://www.npmjs.com/package/sociolod)
+- **Source code:** [Peculiar-010/sociolod on GitHub](https://github.com/Peculiar-010/sociolod)
+- **API service documentation:** [LiteType media API](https://apispec.litype.workers.dev)
 
 ---
 
@@ -62,7 +68,7 @@ const filePath = await client.youtube.download.download(
 
 // Search Spotify
 const tracks = await client.spotify.search.search("blinding lights");
-console.log(tracks[0].name, tracks[0].artists[0].name);
+console.log(tracks[0].name);
 ```
 
 ### Browser
@@ -310,6 +316,28 @@ See [`examples/discord-bot.ts`](./examples/discord-bot.ts)
 ### Telegram bot
 
 See [`examples/telegram-bot.ts`](./examples/telegram-bot.ts)
+
+---
+
+## Frequently Asked Questions
+
+### What is Sociolod?
+Sociolod is an npm SDK that provides a single TypeScript/JavaScript client for YouTube and Spotify search and media operations through the LiteType media API.
+
+### Can I use Sociolod in a Node.js project?
+Yes. Sociolod supports Node.js 18 and newer. Install it with `npm install sociolod` and import `SociolodClient` from the package.
+
+### Does Sociolod support TypeScript?
+Yes. The package includes TypeScript declaration files and supports ESM and CommonJS entry points.
+
+### Can Sociolod search YouTube and Spotify?
+Yes. The client exposes separate YouTube and Spotify search clients, including methods for searching videos and tracks.
+
+### Can Sociolod generate media download URLs?
+The YouTube and Spotify download clients expose methods for requesting MP3/MP4 download URLs and media streams. Availability depends on the upstream API.
+
+### Where can I find the source code and report an issue?
+Visit the [Sociolod GitHub repository](https://github.com/Peculiar-010/sociolod) or open an [issue](https://github.com/Peculiar-010/sociolod/issues).
 
 ---
 
