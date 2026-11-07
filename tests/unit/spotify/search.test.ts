@@ -109,7 +109,7 @@ describe("SpotifySearchClient cache coverage", () => {
   it("uses cached values for song, cover, links, and artist", async () => {
     const cache = new LRUCache({ enabled: true, ttl: 60_000 });
     const client = new SpotifySearchClient(BASE_URL, { retries: 0 }, cache);
-    const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+    const fetchMock = vi.fn((input: RequestInfo | URL) => {
       const url = String(input);
       if (url.includes("/cover")) return mockJsonResponse({ url: "https://img.example/cover", trackName: "Test", artist: "Artist" });
       if (url.includes("/links")) return mockJsonResponse(["https://open.spotify.com/track/test"]);
