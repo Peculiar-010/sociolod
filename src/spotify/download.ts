@@ -210,14 +210,14 @@ export class SpotifyDownloadClient {
  */
 async function writeStreamToFile(response: Response, outDir: string): Promise<string> {
   const { createWriteStream, mkdirSync } = await import("node:fs");
-  const { join } = await import("node:path");
+  const path = await import("node:path");
 
   const disposition = response.headers.get("content-disposition") ?? "";
   const fileNameMatch = /filename="?([^";\n]+)"?/.exec(disposition);
   const fileName = fileNameMatch?.[1] ?? `spotify-${Date.now()}.mp3`;
 
   mkdirSync(outDir, { recursive: true });
-  const filePath = join(outDir, fileName);
+  const filePath = path.join(outDir, fileName);
 
   if (!response.body) throw new Error("Response body is null");
 
