@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.0.1 (2026-11-07)
+
+### Changed
+- Improved README search discoverability with clearer YouTube and Spotify SDK descriptions, direct project links, and FAQs.
+- Refined npm package description and keywords for relevant TypeScript, Node.js, YouTube, Spotify, and media SDK searches.
+
+
 This file is maintained by [changesets](https://github.com/changesets/changesets).
 
 ## 1.0.0 (2024)
