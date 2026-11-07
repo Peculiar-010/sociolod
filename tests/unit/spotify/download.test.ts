@@ -118,7 +118,7 @@ describe("SpotifyDownloadClient cache coverage", () => {
   it("uses cached values for info, preview, match, and download URL", async () => {
     const cache = new LRUCache({ enabled: true, ttl: 60_000 });
     const client = new SpotifyDownloadClient(BASE_URL, { retries: 0 }, cache);
-    const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+    const fetchMock = vi.fn((input: RequestInfo | URL) => {
       const url = String(input);
       if (url.includes("/preview")) return mockJsonResponse({ url: "https://cdn.example/preview.mp3", trackId: "track", trackName: "Track", durationMs: 30000 });
       if (url.includes("/match")) return mockJsonResponse({ spotifyTrack: SPOTIFY_TRACK, youtubeMatch: { videoId: "abc", title: "Video", url: "https://youtube.com/watch?v=abc", duration: "3:00", confidence: 0.9 } });
