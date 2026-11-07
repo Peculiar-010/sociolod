@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, vi, afterEach } from "vitest";
 import { YouTubeSearchClient } from "../../../src/youtube/search.js";
 import { ValidationError, HttpError } from "../../../src/errors.js";
 import { LRUCache } from "../../../src/cache.js";
