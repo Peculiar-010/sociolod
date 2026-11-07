@@ -103,3 +103,30 @@ describe("SpotifySearchClient.artist", () => {
     expect((vi.mocked(fetch).mock.calls[0] as [string])[0]).toContain("spotsearch/artist");
   });
 });
+
+
+describe("SpotifySearchClient cache coverage", () => {
+  it("uses cached values for song, cover, links, and artist", async () => {
+    const cache = new LRUCache({ enabled: true, ttl: 60_000 });
+    const client = new SpotifySearchClient(BASE_URL, { retries: 0 }, cache);
+    const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.includes("/cover")) return mockJsonResponse({ url: "https://img.example/cover", trackName: "Test", artist: "Artist" });
+      if (url.includes("/links")) return mockJsonResponse(["https://open.spotify.com/track/test"]);
+      if (url.includes("/artist")) return mockJsonResponse({ id: "artist", name: "Artist", url: "https://open.spotify.com/artist/artist" });
+      return mockJsonResponse(SPOTIFY_TRACK);
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    await client.song("cached song");
+    await client.song("cached song");
+    await client.cover("cached cover");
+    await client.cover("cached cover");
+    await client.links("cached links");
+    await client.links("cached links");
+    await client.artist("cached artist");
+    await client.artist("cached artist");
+
+    expect(fetchMock).toHaveBeenCalledTimes(4);
+  });
+});
