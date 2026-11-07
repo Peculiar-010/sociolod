@@ -3,7 +3,7 @@
 [![npm version](https://img.shields.io/npm/v/sociolod.svg?style=flat-square)](https://www.npmjs.com/package/sociolod)
 [![npm downloads](https://img.shields.io/npm/dm/sociolod.svg?style=flat-square)](https://www.npmjs.com/package/sociolod)
 [![license](https://img.shields.io/npm/l/sociolod.svg?style=flat-square)](https://github.com/Peculiar-010/sociolod/blob/main/LICENSE)
-[![build](https://img.shields.io/github/actions/workflow/status/YOUR_USERNAME/sociolod/ci.yml?style=flat-square)](https://github.com/Peculiar-010/sociolod/actions)
+[![build](https://img.shields.io/github/actions/workflow/status/Peculiar-010/sociolod/ci.yml?style=flat-square)](https://github.com/Peculiar-010/sociolod/actions)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-blue?style=flat-square)](https://www.typescriptlang.org/)
 
 **sociolod** is a production-ready TypeScript SDK for the [LiteType media API](https://apispec.litype.workers.dev). It wraps YouTube search, YouTube audio/video download, Spotify search, and Spotify download into a single, fully-typed package that works in Node.js, browsers, Cloudflare Workers, Vercel Edge, Discord bots, Telegram bots, and React Native apps — with zero mandatory dependencies.
