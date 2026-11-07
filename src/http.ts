@@ -25,10 +25,7 @@ export function buildUrl(
   return url.toString();
 }
 
-export async function fetchWithRetry(
-  url: string,
-  options: RequestOptions,
-): Promise<Response> {
+export async function fetchWithRetry(url: string, options: RequestOptions): Promise<Response> {
   const timeout = options.timeout ?? 15000;
   const retries = options.retries ?? 3;
   const retryDelay = options.retryDelay ?? 500;
