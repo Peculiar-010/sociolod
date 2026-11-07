@@ -148,10 +148,9 @@ export async function fetchJson<T>(
 
 /**
  * Fetches a Response for streaming (does not parse body).
- */
-export async function fetchStream(
+ */export async function fetchStream(
   url: string,
-  options: RequestOptions = {},
+  options: RequestOptions,
 ): Promise<Response> {
   return fetchWithRetry(url, { ...options, stream: true });
 }
