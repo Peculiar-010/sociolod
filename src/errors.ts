@@ -1,34 +1,24 @@
-/**
- * Base error class for all sociolod errors.
- */
 export class SociolodError extends Error {
-  public readonly name: string = "SociolodError";
+  override name: string = "SociolodError";
 
-  constructor(message: string, options?: ErrorOptions) {
-    super(message, options);
+  constructor(message: string) {
+    super(message);
     Object.setPrototypeOf(this, new.target.prototype);
   }
 }
 
-/**
- * Thrown when a network-level failure occurs (e.g. DNS failure, connection refused,
- * AbortError / timeout, fetch failed).
- */
 export class NetworkError extends SociolodError {
-  public readonly name = "NetworkError";
+  override name = "NetworkError";
   public readonly cause: unknown;
 
   constructor(message: string, cause?: unknown) {
-    super(message, cause instanceof Error ? { cause } : undefined);
+    super(message);
     this.cause = cause;
   }
 }
 
-/**
- * Thrown when the API responds with a non-2xx HTTP status code.
- */
 export class HttpError extends SociolodError {
-  public readonly name = "HttpError";
+  override name = "HttpError";
   public readonly status: number;
   public readonly statusText: string;
   public readonly body: string;
@@ -43,12 +33,8 @@ export class HttpError extends SociolodError {
   }
 }
 
-/**
- * Thrown when request input fails validation (e.g. empty query, invalid URL,
- * unsupported format value).
- */
 export class ValidationError extends SociolodError {
-  public readonly name = "ValidationError";
+  override name = "ValidationError";
   public readonly field: string;
 
   constructor(field: string, message: string) {
@@ -57,13 +43,8 @@ export class ValidationError extends SociolodError {
   }
 }
 
-/**
- * Thrown when the API responds with HTTP 429 Too Many Requests.
- * Check `retryAfter` (seconds) before retrying.
- */
 export class RateLimitError extends HttpError {
-  public readonly name = "RateLimitError";
-  /** Number of seconds to wait before retrying (from Retry-After header), or null. */
+  override readonly name = "RateLimitError";
   public readonly retryAfter: number | null;
 
   constructor(retryAfter: number | null, url: string, body = "") {
