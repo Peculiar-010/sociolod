@@ -139,7 +139,7 @@ describe("YouTubeDownloadClient cache coverage", () => {
   it("uses cached values for info, thumbnail, and download URL", async () => {
     const cache = new LRUCache({ enabled: true, ttl: 60_000 });
     const client = new YouTubeDownloadClient(BASE_URL, { retries: 0 }, cache);
-    const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+    const fetchMock = vi.fn((input: RequestInfo | URL) => {
       const url = String(input);
       if (url.includes("/thumb")) return mockJsonResponse({ url: "https://img.example/thumb.jpg" });
       if (url.includes("/url")) return mockJsonResponse(YT_DOWNLOAD_URL_RESULT);
