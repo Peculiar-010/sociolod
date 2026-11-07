@@ -1,6 +1,6 @@
 {
   "name": "sociolod",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "TypeScript SDK for YouTube and Spotify APIs. Search videos and tracks, retrieve media metadata and thumbnails, and request MP3/MP4 download URLs or streams in Node.js, browsers, and edge runtimes.",
   "keywords": [
     "sociolod",
