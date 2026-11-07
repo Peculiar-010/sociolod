@@ -79,7 +79,7 @@ Copy and paste for launch announcements:
 **Twitter/X:**
 > 🚀 Just released sociolod — a universal TypeScript SDK for YouTube & Spotify search, metadata, and MP3 downloads. Works in Node.js, browsers, Cloudflare Workers, Discord bots, and more.
 > npm install sociolod
-> GitHub: https://github.com/YOUR_USERNAME/sociolod
+> GitHub: https://github.com/Peculiar-010/sociolod
 > #TypeScript #npm #youtube #spotify #opensource
 
 **Reddit (r/typescript, r/node):**
