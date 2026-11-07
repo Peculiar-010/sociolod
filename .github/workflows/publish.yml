@@ -33,7 +33,7 @@ jobs:
 
       - name: Read package version
         id: package
-        run: node -e "require('fs').appendFileSync(process.env.GITHUB_OUTPUT, 'version=' + require('./package.json').version + '\\n')"
+        run: node -p "require(\'./package.json\').version" | sed \'s/^/version=\' >> "$GITHUB_OUTPUT"
 
       - name: Install dependencies
         run: pnpm install --no-frozen-lockfile
