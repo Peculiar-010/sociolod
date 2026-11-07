@@ -112,3 +112,30 @@ describe("SpotifyDownloadClient.download", () => {
     await expect(client.download(VALID_SPOTIFY_URL, { format: "wav" as never })).rejects.toThrow(ValidationError);
   });
 });
+
+
+describe("SpotifyDownloadClient cache coverage", () => {
+  it("uses cached values for info, preview, match, and download URL", async () => {
+    const cache = new LRUCache({ enabled: true, ttl: 60_000 });
+    const client = new SpotifyDownloadClient(BASE_URL, { retries: 0 }, cache);
+    const fetchMock = vi.fn((input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.includes("/preview")) return mockJsonResponse({ url: "https://cdn.example/preview.mp3", trackId: "track", trackName: "Track", durationMs: 30000 });
+      if (url.includes("/match")) return mockJsonResponse({ spotifyTrack: SPOTIFY_TRACK, youtubeMatch: { videoId: "abc", title: "Video", url: "https://youtube.com/watch?v=abc", duration: "3:00", confidence: 0.9 } });
+      if (url.includes("/url")) return mockJsonResponse(SPOTIFY_DOWNLOAD_URL_RESULT);
+      return mockJsonResponse(SPOTIFY_TRACK);
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    await client.info(VALID_SPOTIFY_URL);
+    await client.info(VALID_SPOTIFY_URL);
+    await client.preview(VALID_SPOTIFY_URL);
+    await client.preview(VALID_SPOTIFY_URL);
+    await client.match(VALID_SPOTIFY_URL);
+    await client.match(VALID_SPOTIFY_URL);
+    await client.url(VALID_SPOTIFY_URL, { format: "mp3" });
+    await client.url(VALID_SPOTIFY_URL, { format: "mp3" });
+
+    expect(fetchMock).toHaveBeenCalledTimes(4);
+  });
+});

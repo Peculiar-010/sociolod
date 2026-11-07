@@ -2,7 +2,7 @@ module.exports = {
   root: true,
   parser: "@typescript-eslint/parser",
   parserOptions: {
-    project: "./tsconfig.json",
+    project: "./tsconfig.eslint.json",
     ecmaVersion: 2020,
     sourceType: "module",
   },
@@ -20,5 +20,18 @@ module.exports = {
     "@typescript-eslint/consistent-type-imports": "error",
     "prettier/prettier": "error",
   },
+  overrides: [
+    {
+      files: ["tests/**/*.ts", "examples/**/*.ts"],
+      rules: {
+        "@typescript-eslint/no-unsafe-assignment": "off",
+        "@typescript-eslint/no-unsafe-call": "off",
+        "@typescript-eslint/no-unsafe-member-access": "off",
+        "@typescript-eslint/no-unsafe-argument": "off",
+        "@typescript-eslint/no-unsafe-return": "off",
+        "prettier/prettier": "off",
+      },
+    },
+  ],
   ignorePatterns: ["dist/", "node_modules/", "*.cjs", "*.js"],
 };

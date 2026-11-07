@@ -182,9 +182,9 @@ Import: import { SociolodClient } from "sociolod"
 Create: const client = new SociolodClient()
 Use: await client.youtube.search.search("query")
 
-Tree-shakeable:
-  import { ytSearch } from "sociolod/youtube"
-  import { spotSearch } from "sociolod/spotify"
+YouTube and Spotify subpath entry points:
+  import { YouTubeSearchClient, YouTubeDownloadClient } from "sociolod/youtube"
+  import { SpotifySearchClient, SpotifyDownloadClient } from "sociolod/spotify"
 
 Error types:
   ValidationError — invalid input

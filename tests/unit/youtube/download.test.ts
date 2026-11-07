@@ -133,3 +133,27 @@ describe("YouTubeDownloadClient.search", () => {
     await expect(client.search("test", { format: "flac" as never })).rejects.toThrow(ValidationError);
   });
 });
+
+
+describe("YouTubeDownloadClient cache coverage", () => {
+  it("uses cached values for info, thumbnail, and download URL", async () => {
+    const cache = new LRUCache({ enabled: true, ttl: 60_000 });
+    const client = new YouTubeDownloadClient(BASE_URL, { retries: 0 }, cache);
+    const fetchMock = vi.fn((input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.includes("/thumb")) return mockJsonResponse({ url: "https://img.example/thumb.jpg" });
+      if (url.includes("/url")) return mockJsonResponse(YT_DOWNLOAD_URL_RESULT);
+      return mockJsonResponse(YT_VIDEO_INFO);
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    await client.info(VALID_YT_URL);
+    await client.info(VALID_YT_URL);
+    await client.thumb(VALID_YT_URL);
+    await client.thumb(VALID_YT_URL);
+    await client.url(VALID_YT_URL, { format: "mp3" });
+    await client.url(VALID_YT_URL, { format: "mp3" });
+
+    expect(fetchMock).toHaveBeenCalledTimes(3);
+  });
+});

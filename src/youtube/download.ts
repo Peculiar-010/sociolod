@@ -227,7 +227,7 @@ export class YouTubeDownloadClient {
  */
 async function writeStreamToFile(response: Response, outDir: string): Promise<string> {
   const { createWriteStream, mkdirSync } = await import("node:fs");
-  const { join } = await import("node:path");
+  const path = await import("node:path");
 
   // Extract filename from Content-Disposition header or generate one
   const disposition = response.headers.get("content-disposition") ?? "";
@@ -237,7 +237,7 @@ async function writeStreamToFile(response: Response, outDir: string): Promise<st
     `download-${Date.now()}.${response.headers.get("content-type")?.includes("audio") ? "mp3" : "mp4"}`;
 
   mkdirSync(outDir, { recursive: true });
-  const filePath = join(outDir, fileName);
+  const filePath = path.join(outDir, fileName);
 
   if (!response.body) throw new Error("Response body is null");
 

@@ -84,10 +84,10 @@ describe("fetchWithRetry", () => {
       retryDelay: 100,
     });
 
-    // Advance past all backoff delays: 100ms + 200ms
+    const rejection = expect(fetchPromise).rejects.toThrow(HttpError);
+    // Attach the rejection assertion before advancing the retry timers.
     await vi.runAllTimersAsync();
-
-    await expect(fetchPromise).rejects.toThrow(HttpError);
+    await rejection;
     expect(mockFn).toHaveBeenCalledTimes(3); // 1 initial + 2 retries
   });
 
@@ -99,9 +99,9 @@ describe("fetchWithRetry", () => {
       retries: 1,
       retryDelay: 10,
     });
+    const rejection = expect(fetchPromise).rejects.toThrow(NetworkError);
     await vi.runAllTimersAsync();
-
-    await expect(fetchPromise).rejects.toThrow(NetworkError);
+    await rejection;
     expect(mockFn).toHaveBeenCalledTimes(2);
   });
 });

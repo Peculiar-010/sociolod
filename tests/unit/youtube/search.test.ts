@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, vi, afterEach } from "vitest";
 import { YouTubeSearchClient } from "../../../src/youtube/search.js";
 import { ValidationError, HttpError } from "../../../src/errors.js";
 import { LRUCache } from "../../../src/cache.js";
@@ -131,5 +131,35 @@ describe("YouTubeSearchClient.channel", () => {
   it("throws ValidationError for empty query", async () => {
     const client = makeClient();
     await expect(client.channel("")).rejects.toThrow(ValidationError);
+  });
+});
+
+
+describe("YouTubeSearchClient cache coverage", () => {
+  it("uses cached values for video, thumbnail, links, titles, and channel", async () => {
+    const cache = new LRUCache({ enabled: true, ttl: 60_000 });
+    const client = new YouTubeSearchClient(BASE_URL, { retries: 0 }, cache);
+    const fetchMock = vi.fn((input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.includes("/thumb")) return mockJsonResponse({ url: "https://img.example/thumb", videoId: "abc", title: "Video" });
+      if (url.includes("/links")) return mockJsonResponse(["https://youtube.com/watch?v=abc"]);
+      if (url.includes("/titles")) return mockJsonResponse(["Video title"]);
+      if (url.includes("/channel")) return mockJsonResponse({ id: "channel", title: "Channel", url: "https://youtube.com/@channel" });
+      return mockJsonResponse(YT_SEARCH_RESULT);
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    await client.video("cached video");
+    await client.video("cached video");
+    await client.thumb("cached thumb");
+    await client.thumb("cached thumb");
+    await client.links("cached links");
+    await client.links("cached links");
+    await client.titles("cached titles");
+    await client.titles("cached titles");
+    await client.channel("cached channel");
+    await client.channel("cached channel");
+
+    expect(fetchMock).toHaveBeenCalledTimes(5);
   });
 });
