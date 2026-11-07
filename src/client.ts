@@ -71,7 +71,7 @@ export class SociolodClient {
     };
 
     this.cache = config.cache?.enabled
-      ? new LRUCache(config.cache)
+      ? new LRUCache(config.cache!)
       : noopCache;
 
     const requestOptions: RequestOptions = {
