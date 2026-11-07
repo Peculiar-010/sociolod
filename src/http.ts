@@ -5,9 +5,6 @@ const DEFAULT_TIMEOUT = 15_000;
 const DEFAULT_RETRIES = 3;
 const DEFAULT_RETRY_DELAY = 500;
 
-/**
- * Builds a URL with query parameters, omitting undefined/null values.
- */
 export function buildUrl(
   baseUrl: string,
   path: string,
@@ -24,39 +21,22 @@ export function buildUrl(
   return url.toString();
 }
 
-/**
- * Sleep for `ms` milliseconds.
- */
 function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-/**
- * Determines if a given HTTP status code is retryable.
- */
 function isRetryableStatus(status: number): boolean {
   return status === 429 || (status >= 500 && status <= 599);
 }
 
-/**
- * Core fetch wrapper with:
- * - Configurable timeout via AbortController
- * - Exponential backoff retry on 5xx and network errors
- * - Rate-limit (429) detection → throws RateLimitError
- * - Non-2xx → throws HttpError
- * - Network failure → throws NetworkError
- */
 export async function fetchWithRetry(
   url: string,
-  options: RequestOptions & { extraHeaders?: Record<string, string> } = {},
+  options: RequestOptions,
 ): Promise<Response> {
-  const {
-    method = "GET",
-    headers = {},
-    timeout = DEFAULT_TIMEOUT,
-    retries = DEFAULT_RETRIES,
-    retryDelay = DEFAULT_RETRY_DELAY,
-  } = options;
+  const timeout = options.timeout ?? DEFAULT_TIMEOUT;
+  const retries = options.retries ?? DEFAULT_RETRIES;
+  const retryDelay = options.retryDelay ?? DEFAULT_RETRY_DELAY;
+  const headers = options.headers ?? {};
 
   let lastError: unknown;
 
@@ -66,7 +46,7 @@ export async function fetchWithRetry(
 
     try {
       const response = await fetch(url, {
-        method,
+        method: "GET",
         headers: {
           Accept: "application/json",
           "User-Agent": "sociolod/1.0.0",
@@ -77,24 +57,20 @@ export async function fetchWithRetry(
 
       clearTimeout(timerId);
 
-      // Rate limit
       if (response.status === 429) {
         const retryAfterRaw = response.headers.get("Retry-After");
-        const retryAfter = retryAfterRaw ? parseInt(retryAfterRaw, 10) : null;
+        const parsed = retryAfterRaw ? parseInt(retryAfterRaw, 10) : null;
+        const retryAfter = parsed !== null && !isNaN(parsed) ? parsed : null;
         const body = await response.text().catch(() => "");
-        throw new RateLimitError(isNaN(retryAfter as number) ? null : retryAfter, url, body);
+        throw new RateLimitError(retryAfter, url, body);
       }
 
-      // Server errors – retry
       if (isRetryableStatus(response.status) && attempt < retries) {
-        const body = await response.text().catch(() => "");
-        lastError = new HttpError(response.status, response.statusText, body, url);
-        const delay = retryDelay * Math.pow(2, attempt);
-        await sleep(delay);
+        lastError = new HttpError(response.status, response.statusText, "", url);
+        await sleep(retryDelay * Math.pow(2, attempt));
         continue;
       }
 
-      // Other non-2xx
       if (!response.ok) {
         const body = await response.text().catch(() => "");
         throw new HttpError(response.status, response.statusText, body, url);
@@ -104,15 +80,11 @@ export async function fetchWithRetry(
     } catch (error) {
       clearTimeout(timerId);
 
-      // Don't retry RateLimitError or non-retryable HttpError
       if (error instanceof RateLimitError) throw error;
       if (error instanceof HttpError && !isRetryableStatus(error.status)) throw error;
 
-      // AbortError = timeout
       if (error instanceof Error && error.name === "AbortError") {
         lastError = new NetworkError(`Request timed out after ${timeout}ms: ${url}`, error);
-      } else if (error instanceof SyntaxError) {
-        throw error;
       } else if (!(error instanceof HttpError)) {
         lastError = new NetworkError(
           `Network error: ${error instanceof Error ? error.message : String(error)}`,
@@ -123,8 +95,7 @@ export async function fetchWithRetry(
       }
 
       if (attempt < retries) {
-        const delay = retryDelay * Math.pow(2, attempt);
-        await sleep(delay);
+        await sleep(retryDelay * Math.pow(2, attempt));
       }
     }
   }
@@ -135,22 +106,11 @@ export async function fetchWithRetry(
   throw new NetworkError(`Request failed after ${retries} retries: ${url}`, lastError);
 }
 
-/**
- * Fetches JSON from the given URL with retry logic.
- */
-export async function fetchJson<T>(
-  url: string,
-  options: RequestOptions,
-): Promise<T> {
+export async function fetchJson<T>(url: string, options: RequestOptions): Promise<T> {
   const response = await fetchWithRetry(url, options);
   return response.json() as Promise<T>;
 }
 
-/**
- * Fetches a Response for streaming (does not parse body).
- */export async function fetchStream(
-  url: string,
-  options: RequestOptions,
-): Promise<Response> {
-  return fetchWithRetry(url, { ...options, stream: true });
-}
+export async function fetchStream(url: string, options: RequestOptions): Promise<Response> {
+  return fetchWithRetry(url, options);
+          }
