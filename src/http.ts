@@ -25,7 +25,7 @@ export function buildUrl(
   return url.toString();
 }
 
-export async function fetchWithRetry(url: string, options: RequestOptions): Promise<Response> {
+export async function fetchWithRetry(url: string, options: RequestOptions = {}): Promise<Response> {
   const timeout = options.timeout ?? 15000;
   const retries = options.retries ?? 3;
   const retryDelay = options.retryDelay ?? 500;
@@ -40,7 +40,7 @@ export async function fetchWithRetry(url: string, options: RequestOptions): Prom
 
     try {
       const response = await fetch(url, {
-        method: "GET",
+        method: options.method ?? "GET",
         headers: {
           Accept: "application/json",
           "User-Agent": "sociolod/1.0.0",
@@ -94,11 +94,11 @@ export async function fetchWithRetry(url: string, options: RequestOptions): Prom
   throw lastError instanceof Error ? lastError : new NetworkError(`Failed: ${url}`, lastError);
 }
 
-export async function fetchJson<T>(url: string, options: RequestOptions): Promise<T> {
+export async function fetchJson<T>(url: string, options: RequestOptions = {}): Promise<T> {
   const response = await fetchWithRetry(url, options);
   return response.json() as Promise<T>;
 }
 
-export async function fetchStream(url: string, options: RequestOptions): Promise<Response> {
+export async function fetchStream(url: string, options: RequestOptions = {}): Promise<Response> {
   return fetchWithRetry(url, options);
 }
